@@ -104,6 +104,19 @@ public abstract class AbsGreenHouse {
         hums.sort(Double::compare);
     }
 
+    /**
+     * Gets the first reading that correspond to a particular date, or an empty reading
+     * @param onDate a date in the format //TODO
+     */
+    public DateReading getDateReadings(double onDate) {
+        for (DateReading d : dateReadings){
+            if (Utility.compareDoubles(d.getDate(), onDate)){
+                return d;
+            }
+        }
+        return new DateReading(0, new ArrayList<Double>(), new ArrayList<Double>());
+    }
+
     // GIVEN CODE
     /**
      * Assume a sensor value is a date if it is greater jan 01, 1970

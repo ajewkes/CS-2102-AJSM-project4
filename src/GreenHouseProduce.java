@@ -56,21 +56,18 @@ public class GreenHouseProduce extends AbsGreenHouse implements Sensible{
      */
     @Override
     public TempHumidReading middleReading(double onDate) {
-        for (DateReading d : dateReadings){
-            if (Utility.compareDoubles(d.getDate(), onDate)){
-                ArrayList<Double> temps = d.getTemps();
-                ArrayList<Double> hums = d.getHums();
-                Double temp = -999.0;
-                Double hum = -999.0;
-                if (!temps.isEmpty())
-                    temp = temps.get(temps.size()/2);
-                if (!hums.isEmpty())
-                    hum = hums.get(hums.size()/2);
+        DateReading d = getDateReadings(onDate);
 
-                return new SuperTempHumidReading(temp, hum);
-            }
-        }
-        return new SuperTempHumidReading(-999.0, -999.0);
+        ArrayList<Double> temps = d.getTemps();
+        ArrayList<Double> hums = d.getHums();
+        Double temp = -999.0;
+        Double hum = -999.0;
+        if (!temps.isEmpty())
+            temp = temps.get(temps.size()/2);
+        if (!hums.isEmpty())
+            hum = hums.get(hums.size()/2);
+
+        return new SuperTempHumidReading(temp, hum);
     }
 
 }

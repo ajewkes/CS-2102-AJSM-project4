@@ -68,21 +68,18 @@ public class GreenHouseNursery extends AbsGreenHouse implements Sensible{
     public TempHumidReading middleReading(double onDate) {
         dateReadings.addAll(cleanData(parseData(data)));
         flattenReadings();
+        DateReading d = getDateReadings(onDate);
 
-        for (DateReading d : dateReadings){
-            if (Utility.compareDoubles(d.getDate(), onDate)){
-                ArrayList<Double> temps = d.getTemps();
-                ArrayList<Double> hums = d.getHums();
-                Double temp = -999.0;
-                Double hum = -999.0;
-                if (!temps.isEmpty())
-                    temp = temps.get(temps.size()/2);
-                if (!hums.isEmpty())
-                    hum = hums.get(hums.size()/2);
+        ArrayList<Double> temps = d.getTemps();
+        ArrayList<Double> hums = d.getHums();
+        Double temp = -999.0;
+        Double hum = -999.0;
+        if (!temps.isEmpty())
+            temp = temps.get(temps.size()/2);
+        if (!hums.isEmpty())
+            hum = hums.get(hums.size()/2);
 
-                return new SuperTempHumidReading(temp, hum);
-            }
-        }
-        return new SuperTempHumidReading(-999.0, -999.0);
+        return new SuperTempHumidReading(temp, hum);
+
     }
 }
