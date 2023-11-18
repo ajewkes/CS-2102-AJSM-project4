@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.GregorianCalendar;
 
 /**
  * A nursery which implements batch processing
@@ -19,7 +20,14 @@ public class GreenHouseNursery extends AbsGreenHouse implements Sensible{
         data = new ArrayList<Double>();
     }
 
-
+    /**
+     * Constructs a greenhouse nursery with calendar
+     * @param calendar the calendar
+     */
+    public GreenHouseNursery(GregorianCalendar calendar){
+        super(calendar);
+        data = new ArrayList<Double>();
+    }
 
     /**
      * Reads an ordered sequence of data from the weather sensors to store in the greenhouse

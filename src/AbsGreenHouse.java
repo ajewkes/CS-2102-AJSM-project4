@@ -3,11 +3,12 @@ import jdk.jshell.execution.Util;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.GregorianCalendar;
 
 /**
  * An abstract superclass to provide template methods for performance specific subclasses.
  */
-public abstract class AbsGreenHouse {
+public abstract class AbsGreenHouse implements QualityControlable{
     /**
      * A list of date readings
      */
@@ -22,12 +23,27 @@ public abstract class AbsGreenHouse {
     protected ArrayList<Double> hums;
 
     /**
+     * A gregorian calendar
+     */
+    protected GregorianCalendar calendar;
+
+    /**
      * Constructs a new abstract greenhoyse
      */
     public AbsGreenHouse(){
         temps = new ArrayList<Double>();
         hums = new ArrayList<Double>();
         dateReadings = new ArrayList<DateReading>();
+        calendar = new GregorianCalendar();
+    }
+
+    /**
+     * Constructs a new abstract greenhouse with
+     * calendar initialized as calendar
+     * @param calendar the calendar
+     */
+    public AbsGreenHouse(GregorianCalendar calendar){
+        this.calendar = calendar;
     }
 
     /**
@@ -115,6 +131,14 @@ public abstract class AbsGreenHouse {
             }
         }
         return new DateReading(0, new ArrayList<Double>(), new ArrayList<Double>());
+    }
+
+    /**
+     * computes the current percentage of non-datetime sensor values that are -999.0s
+     * @return a percent value between 0.0 and 100.0 inclusive
+     */
+    public double percentError(){
+       return 0;
     }
 
     // GIVEN CODE

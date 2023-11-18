@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -11,6 +12,14 @@ public class GreenHouseProduce extends AbsGreenHouse implements Sensible{
      */
     public GreenHouseProduce(){
         super();
+    }
+
+    /**
+     * Constructs a greenhouse nursery with calendar
+     * @param calendar the calendar
+     */
+    public GreenHouseProduce(GregorianCalendar calendar){
+        super(calendar);
     }
 
     /**
