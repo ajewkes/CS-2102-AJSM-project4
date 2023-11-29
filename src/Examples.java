@@ -23,11 +23,11 @@ public class Examples {
             data.add(random.nextDouble() % 100);
         }
 
-        long time1 = System.currentTimeMillis();
+        long time1 = System.nanoTime();
         nursery.pollSensorData(data);
-        long time2 = System.currentTimeMillis();
+        long time2 = System.nanoTime();
         produce.pollSensorData(data);
-        long time3 = System.currentTimeMillis();
+        long time3 = System.nanoTime();
 
         long nurseryTime = time2 - time1;
         long produceTime = time3 - time2;
@@ -68,6 +68,16 @@ public class Examples {
     @Test
     public void testPollAndMiddleNursery(){
         GreenHouseNursery nursery = new GreenHouseNursery(cal);
+        List<Double> data = List.of(20231106010101.0,45.5,34.0,46.6,40.0,20231130020202.0,22.2,20.0,35.5,30.0,-999.0,31.0,32.2,-999.0);
+
+        nursery.pollSensorData(data);
+        assertEquals(nursery.middleReading(), new SuperTempHumidReading( 35.5,  31.0));
+    }
+
+    @Test
+    public void testPollAndMiddleNurseryHashMap(){
+        GreenHouseNursery nursery = new GreenHouseNursery(cal);
+        nursery.setStrategy(new HashMapStrategy());
         List<Double> data = List.of(20231106010101.0,45.5,34.0,46.6,40.0,20231130020202.0,22.2,20.0,35.5,30.0,-999.0,31.0,32.2,-999.0);
 
         nursery.pollSensorData(data);
@@ -163,6 +173,20 @@ public class Examples {
     }
 
     @Test
+    public void testPollSensorDataNurseryHashMap(){
+
+        List<Double> data = List.of(20231106010101.0, 49.0, 32.0, 45.0, 67.0, 43.0, 57.0);
+
+        GreenHouseNursery g = new GreenHouseNursery(cal);
+        g.setStrategy(new HashMapStrategy());
+
+        g.pollSensorData(data);
+
+        assertEquals(g.middleReading(), new SuperTempHumidReading(45.0, 57.0));
+
+    }
+
+    @Test
     public void testPollSensorDataProduceTwice(){
 
         List<Double> data = List.of(20231106010101.0, 49.0, 32.0, 45.0, 67.0, 43.0, 57.0);
@@ -182,6 +206,21 @@ public class Examples {
         List<Double> data = List.of(20231106010101.0, 49.0, 32.0, 45.0, 67.0, 43.0, 57.0);
 
         GreenHouseNursery g = new GreenHouseNursery(cal);
+
+        g.pollSensorData(data);
+        g.pollSensorData(data);
+
+        assertEquals(g.middleReading(), new SuperTempHumidReading(45.0, 57.0));
+
+    }
+
+    @Test
+    public void testPollSensorDataNurseryTwiceHashMap(){
+
+        List<Double> data = List.of(20231106010101.0, 49.0, 32.0, 45.0, 67.0, 43.0, 57.0);
+
+        GreenHouseNursery g = new GreenHouseNursery(cal);
+        g.setStrategy(new HashMapStrategy());
 
         g.pollSensorData(data);
         g.pollSensorData(data);
@@ -215,6 +254,115 @@ public class Examples {
         assertEquals(g.middleReading(20231106), new SuperTempHumidReading(45.0, 57.0));
 
     }
+
+    @Test
+    public void testPollSensorDataNurseryDateHashMap(){
+
+        List<Double> data = List.of(20231106010101.0, 49.0, 32.0, 45.0, 67.0, 43.0, 57.0);
+
+        GreenHouseNursery g = new GreenHouseNursery(cal);
+        g.setStrategy(new HashMapStrategy());
+
+        g.pollSensorData(data);
+
+        assertEquals(g.middleReading(20231106), new SuperTempHumidReading(45.0, 57.0));
+
+    }
+
+    @Test
+    public void testPercentErrorProduce(){
+
+        List<Double> data = List.of(20231106010101.0, 49.0, -999.0, 45.0, 67.0, 43.0, 57.0);
+
+        GreenHouseProduce g = new GreenHouseProduce(cal);
+
+        g.pollSensorData(data);
+
+
+        assertEquals((1.0 / 6.0)*100, g.percentError(), 0.0001);
+
+    }
+
+    @Test
+    public void testPercentErrorNursery(){
+
+        List<Double> data = List.of(20231106010101.0, 49.0, -999.0, 45.0, 67.0, 43.0, 57.0);
+
+        GreenHouseNursery g = new GreenHouseNursery(cal);
+
+        g.pollSensorData(data);
+
+
+        assertEquals((1.0 / 6.0)*100, g.percentError(), 0.0001);
+
+    }
+
+    @Test
+    public void testPercentErrorNurseryHashMap(){
+
+        List<Double> data = List.of(20231106010101.0, 49.0, -999.0, 45.0, 67.0, 43.0, 57.0);
+
+        GreenHouseNursery g = new GreenHouseNursery(cal);
+        g.setStrategy(new HashMapStrategy());
+
+        g.pollSensorData(data);
+
+
+        assertEquals((1.0 / 6.0)*100, g.percentError(), 0.0001);
+
+    }
+
+    @Test
+    public void testInvalidData(){
+
+        List<Double> data = List.of(20201106010101.0, 49.0, -33.0, 45.0, 67.0, 43.0, 57.0);
+
+        GreenHouseNursery g = new GreenHouseNursery(cal);
+
+        g.pollSensorData(data);
+
+        assertEquals(g.middleReading(), new SuperTempHumidReading(-999.0, -999.0));
+
+    }
+
+    @Test
+    public void testChangeCalendar(){
+        GregorianCalendar gc = new GregorianCalendar(2023,0, 1);
+
+        GreenHouseProduce g = new GreenHouseProduce(gc);
+
+        List<Double> data = List.of(20221106010101.0, 49.0, -33.0, 45.0, 67.0, 43.0, 57.0);
+
+        gc.set(2021, 0, 1);
+
+        g.pollSensorData(data);
+
+        assertEquals(new SuperTempHumidReading(-999.0, -999.0), g.middleReading());
+
+    }
+
+    @Test
+    public void testFilterDates(){
+        GregorianCalendar gc = new GregorianCalendar(2023,0, 1);
+
+        GreenHouseProduce g = new GreenHouseProduce(gc);
+
+        List<Double> data = List.of(20221106010101.0, 49.0, -33.0, 20231106010101.0, 50.0, 60.0);
+
+        assertEquals(List.of(20231106010101.0, 50.0, 60.0), g.filterData(data));
+    }
+
+    @Test
+    public void testSwitchCalendar(){
+        GregorianCalendar gc = new GregorianCalendar(2023,0, 1);
+
+        GreenHouseProduce g = new GreenHouseProduce(gc);
+
+        List<Double> data = List.of(20240000000000.0, 49.0, -33.0, 20231106010101.0, 50.0, 60.0);
+
+        assertEquals(List.of(20240000000000.0, 49.0, -33.0), g.filterData(data));
+    }
+
 
     /*
     @Test

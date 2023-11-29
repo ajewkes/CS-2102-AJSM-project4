@@ -41,13 +41,6 @@ public class DateReading {
         return date;
     }
 
-    /**
-     * Sets the date to date
-     * @param date the date in format yyyymmdd
-     */
-    public void setDate(double date) {
-        this.date = date;
-    }
 
     /**
      * @return the temperatures
@@ -56,13 +49,6 @@ public class DateReading {
         return temps;
     }
 
-    /**
-     * Sets the temperatures to temps
-     * @param temps the temperatures
-     */
-    public void setTemps(ArrayList<Double> temps) {
-        this.temps = temps;
-    }
 
     /**
      * Gets the humidities
@@ -70,14 +56,6 @@ public class DateReading {
      */
     public ArrayList<Double> getHums() {
         return hums;
-    }
-
-    /**
-     * Sets the humidities to hums
-     * @param hums the humidities
-     */
-    public void setHums(ArrayList<Double> hums) {
-        this.hums = hums;
     }
 
     /**
@@ -96,22 +74,4 @@ public class DateReading {
         this.hums.add(h);
     }
 
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (!(obj instanceof DateReading)){
-//            return false;
-//        }
-//        DateReading d = ((DateReading) obj);
-//        return compareDoubles(this.date, d.date) &&
-//    }
-
-    /**
-     * Compare two doubles for approx. equality
-     * @param uno first double
-     * @param dos second double
-     * @return true if uno is the same as dos within a margin of 0.001
-     */
-    private boolean compareDoubles(double uno, double dos){
-        return Math.abs(uno - dos) <= 0.001;
-    }
 }

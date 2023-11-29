@@ -37,8 +37,7 @@ public class GreenHouseProduce extends AbsGreenHouse implements Sensible{
      */
     @Override
     public void pollSensorData(List<Double> values) {
-        dateReadings.addAll(cleanData(parseData(values)));
-        flattenReadings();
+        parsedDataStrategy.processData(filterData(values));
     }
 
     /**
@@ -50,9 +49,7 @@ public class GreenHouseProduce extends AbsGreenHouse implements Sensible{
      */
     @Override
     public TempHumidReading middleReading() {
-        if (!temps.isEmpty())
-            return new SuperTempHumidReading(temps.get(temps.size()/2), hums.get(hums.size()/2));
-        return new SuperTempHumidReading(-999.0, -999.0);
+        return parsedDataStrategy.middleReading();
     }
 
     /**
@@ -65,18 +62,14 @@ public class GreenHouseProduce extends AbsGreenHouse implements Sensible{
      */
     @Override
     public TempHumidReading middleReading(double onDate) {
-        DateReading d = getDateReadings(onDate);
-
-        ArrayList<Double> temps = d.getTemps();
-        ArrayList<Double> hums = d.getHums();
-        Double temp = -999.0;
-        Double hum = -999.0;
-        if (!temps.isEmpty())
-            temp = temps.get(temps.size()/2);
-        if (!hums.isEmpty())
-            hum = hums.get(hums.size()/2);
-
-        return new SuperTempHumidReading(temp, hum);
+        return parsedDataStrategy.middleReading(onDate);
     }
 
+    /**
+     * computes the current percentage of non-datetime sensor values that are -999.0s
+     * @return a percent value between 0.0 and 100.0 inclusive
+     */
+    public double percentError(){
+        return parsedDataStrategy.percentError();
+    }
 }

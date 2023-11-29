@@ -6,11 +6,11 @@ public class TempHumidReading {
     /**
      * Temperature in Fahrenheit
      */
-    public double temperature;
+    protected double temperature;
     /**
      * Humidity as a % from 0.0% to 100.0%
      */
-    public double humidity;
+    protected double humidity;
 
     /**
      * A standard data constructor

@@ -8,11 +8,6 @@ import java.util.GregorianCalendar;
 public class GreenHouseNursery extends AbsGreenHouse implements Sensible{
 
     /**
-     * Raw sensor data
-     */
-    private ArrayList<Double> data;
-
-    /**
      * Constructs a greenhouse nursery
      */
     public GreenHouseNursery(){
@@ -44,7 +39,7 @@ public class GreenHouseNursery extends AbsGreenHouse implements Sensible{
      */
     @Override
     public void pollSensorData(List<Double> values) {
-        data.addAll(values);
+            data.addAll(filterData(values));
     }
 
     /**
@@ -56,12 +51,9 @@ public class GreenHouseNursery extends AbsGreenHouse implements Sensible{
      */
     @Override
     public TempHumidReading middleReading() {
-        dateReadings.addAll(cleanData(parseData(data)));
-        flattenReadings();
+        parsedDataStrategy.processData(data);
 
-        if (!temps.isEmpty())
-            return new SuperTempHumidReading(temps.get(temps.size()/2), hums.get(hums.size()/2));
-        return new SuperTempHumidReading(-999.0, -999.0);
+        return parsedDataStrategy.middleReading();
     }
 
     /**
@@ -74,20 +66,18 @@ public class GreenHouseNursery extends AbsGreenHouse implements Sensible{
      */
     @Override
     public TempHumidReading middleReading(double onDate) {
-        dateReadings.addAll(cleanData(parseData(data)));
-        flattenReadings();
-        DateReading d = getDateReadings(onDate);
+        parsedDataStrategy.processData(data);
 
-        ArrayList<Double> temps = d.getTemps();
-        ArrayList<Double> hums = d.getHums();
-        Double temp = -999.0;
-        Double hum = -999.0;
-        if (!temps.isEmpty())
-            temp = temps.get(temps.size()/2);
-        if (!hums.isEmpty())
-            hum = hums.get(hums.size()/2);
+        return parsedDataStrategy.middleReading(onDate);
+    }
 
-        return new SuperTempHumidReading(temp, hum);
+    /**
+     * computes the current percentage of non-datetime sensor values that are -999.0s
+     * @return a percent value between 0.0 and 100.0 inclusive
+     */
+    public double percentError(){
+        parsedDataStrategy.processData(data);
 
+        return parsedDataStrategy.percentError();
     }
 }

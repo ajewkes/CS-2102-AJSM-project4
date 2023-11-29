@@ -6,10 +6,5 @@ public interface QualityControlable {
      * @return a percent value between 0.0 and 100.0 inclusive
      */
     double percentError();
-
-
-
-
-
     
 }
